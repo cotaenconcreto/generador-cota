@@ -94,18 +94,18 @@ st.markdown("""
 # 2. INTERFAZ EN PANTALLA
 st.title("⚡ Crea tu contenido estratégico")
 st.subheader("Laboratorio de Contenido para Emprendedoras")
-st.write("Completa las opciones de abajo para diseñar una estrategia de comunicación completa y a tu medida.")
+st.write("Completa las opciones de abajo de forma simple para diseñar una estrategia de comunicación completa y a tu medida.")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 3. CONFIGURACIÓN DEL CONTENIDO (Con aclaraciones ultra amigables entre paréntesis)
+# 3. CONFIGURACIÓN DEL CONTENIDO INTUITIVO Y ENFOCADO
 tipo_contenido = st.selectbox(
     "1. Selecciona el tipo de contenido:",
     [
-        "Detrás de escena (Tu proceso creativo, el taller, el paso a paso de cómo lo hiciste)",
-        "Inspiracional (Tus motivaciones, tu propósito, qué te inspira a diseñar o emprender)",
-        "Educativo (Cómo usar tu producto, ideas de decoración, combinaciones o datos útiles)",
-        "Comunidad (Testimonios de clientes, mensajes bonitos, agradecimientos o alianzas)"
+        "Detrás de escena (Tu proceso de mezcla, llenado, el momento del desmolde o el lijado final)",
+        "Inspiracional (Tus motivaciones, por qué elegiste el concreto, el valor del diseño de autor hecho a mano)",
+        "Educativo (Cómo cuidar las piezas de cemento, ideas de decoración en casa, impermeabilización o datos útiles)",
+        "Comunidad (Testimonios de clientes que ya tienen tus piezas en su hogar, mensajes bonitos, alianzas)"
     ]
 )
 
@@ -131,13 +131,13 @@ llamado_accion = st.selectbox(
 
 detalles_producto = st.text_area(
     "5. ¿De qué producto, lanzamiento o idea específica vas a hablar hoy?",
-    placeholder="Ej: El stock de tazas de cerámica, el lanzamiento de mis nuevas velas, cómo combino los colores de mis productos...",
+    placeholder="Ej: Lanzamiento de mi línea de bachas de baño, stock de macetas color block, porta velas rústicos...",
     height=120
 )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 4. BOTÓN DE ACCIÓN Y GENERACIÓN
+# 4. BOTÓN DE ACCIÓN Y GENERACIÓN CON EL NUEVO CEREBRO ESTRATÉGICO
 if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
     if not detalles_producto:
         st.warning("⚠️ Por favor, escribe una breve descripción de tu idea o producto para poder redactar.")
@@ -150,16 +150,24 @@ if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
         if not api_key_actual:
             st.error("❌ Error de configuración: Falta cargar la clave en el servidor de Streamlit (Secrets).")
         else:
-            with st.spinner("Modelando tus ideas... Diseñando la estrategia perfecta ✨"):
+            with st.spinner("Vaciando el molde... Preparando el contenido perfecto ✨"):
                 try:
                     genai.configure(api_key=api_key_actual)
                     model = genai.GenerativeModel('gemini-2.5-flash')
                     
+                    # FILTROS Y REGLAS INTERNAS ACORDES A TUS DEFINICIONES
                     prompt_sistema = f"""
-                    Actuá como un estratega premium de marketing digital y director de contenido para marcas de diseño de autor, decoración y emprendimientos creativos. 
-                    Estás armando una propuesta de contenido hipercompleta para una alumna emprendedora.
+                    Actuá como un estratega premium de marketing digital y director de contenido especialista en marcas de diseño de autor, decoración y objetos hechos artesanalmente en CONCRETO y CEMENTO.
+                    Estás armando una propuesta de contenido para una alumna emprendedora de objetos de concreto.
 
-                    Variables clave seleccionadas por la alumna:
+                    MANIFIESTO ESTRATÉGICO DEL TALLER (Reglas estrictas de comunicación):
+                    1. EVITÁ EL POST CATÁLOGO: Entendés que el error número uno de las alumnas es mostrar solo una foto fija del producto terminado creyendo que eso basta. Tu misión es obligarlas en la dirección visual y en el texto a mostrar 'la magia del proceso creativo' (el desorden del taller, las manos sucias, la mezcla, el desmolde). El proceso aporta el verdadero valor.
+                    2. ENFOQUE DE VENTA DIRECTA: Si la alumna elige este tono, NO generes un texto transaccional aburrido o basado solo en precio. Enfocá la venta desde la perspectiva de que son 'piezas con carácter y personalidad' capaces de transformar por completo y cambiar un espacio en el hogar.
+                    3. TRATAMIENTO DE IMPERFECCIONES (EL PORO): Si surge hablar de la textura, los poros, las marcas del molde o las variaciones del cemento, tratalos con total naturalidad. No los defiendas con exageración ni dejes que se noten como algo malo o un defecto. Es una propiedad misma del material con la que hay que amigarse; denota autenticidad.
+                    4. FILTRO ANTI-CLICHÉS: Prohibido usar frases hechas de Instagram que matan la identidad y suenan todas igual. NO uses términos como 'piezas únicas', 'concreto con identidad', '¿buscás el regalo ideal?' o 'llegó el viernes'. Escribí de forma humana, directa y lo suficientemente abierta para que cada alumna pueda leerlo e imprimirle su propio tono de voz al hablar.
+                    5. CERO ARCILLA O CERÁMICA: Recordá que el oficio es concreto/cemento. Nada de hornos, tornos ni modelado de arcilla desde cero con las manos. Usamos moldes, fraguado, vertido y lijado.
+
+                    Variables seleccionadas por la alumna:
                     - Tipo de contenido: {tipo_contenido}
                     - Formato seleccionado: {formato_contenido}
                     - Tono de comunicación requerido: {tono_comunicacion}
@@ -169,68 +177,5 @@ if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
                     Tu respuesta DEBE estar dividida exactamente en estas 3 secciones utilizando títulos claros (separa cada sección con marcadores estructurales como [SECCION_TEXTO], [SECCION_VISUAL], [SECCION_ESTRATEGIA]):
 
                     [SECCION_TEXTO]
-                    Generá el contenido final que la alumna va a copiar. Modulá el estilo estrictamente al tono '{tono_comunicacion}'. Asegurate de que se sienta humano, cercano y apasionado por lo hecho a mano. Es fundamental que incluyas un cierre o remate final que cumpla de forma creativa con el llamado a la acción: '{llamado_accion}'.
-                    - Si es Guión de reel: Estructura segundo a segundo (Audio y sugerencia visual de video). Incluí un gancho inicial fuerte.
-                    - Si es Carrusel: Contenido detallado de la Placa 1 a la 5.
-                    - Si es Copy de publicación: Un caption listo con párrafos cortos, renglones bien espaciados y emojis.
-
-                    [SECCION_VISUAL]
-                    Brindá la dirección de arte y fotografía para esta publicación pensando en marcas independientes de diseño:
-                    - Qué filmar o fotografiar (planos detalle, texturas, imperfecciones reales, interacción humana con el producto).
-                    - Estilo de iluminación (luz natural, sombras) y composición para que parezca una foto editorial limpia y profesional.
-                    - Ideas para la portada.
-
-                    [SECCION_ESTRATEGIA]
-                    - 3 Ganchos (hooks) alternativos adaptados al tono '{tono_comunicacion}'.
-                    - Estrategia para Historias: Qué encuesta, pregunta o sticker subir a sus historias de Instagram ese mismo día para complementar y derivar tráfico a este post.
-                    - Un bloque de 5 a 8 hashtags estratégicos y específicos del nicho de diseño y productos hechos a mano.
-
-                    Escribí de forma clara y directa en español latinoamericano o rioplatense fresco, listo para usar.
-                    """
-                    
-                    response = model.generate_content(prompt_sistema)
-                    texto_completo = response.text
-                    
-                    # Separación por pestañas
-                    parte_texto = "No se pudo generar el texto principal."
-                    parte_visual = "No se pudieron generar las ideas visuales."
-                    parte_estrategia = "No se pudo generar la estrategia."
-                    
-                    try:
-                        if "[SECCION_TEXTO]" in texto_completo:
-                            partes = texto_completo.split("[SECCION_TEXTO]")[1].split("[SECCION_VISUAL]")
-                            parte_texto = partes[0].strip()
-                            if len(partes) > 1:
-                                sub_partes = partes[1].split("[SECCION_ESTRATEGIA]")
-                                parte_visual = sub_partes[0].strip()
-                                if len(sub_partes) > 1:
-                                    parte_estrategia = sub_partes[1].strip()
-                        else:
-                            parte_texto = texto_completo
-                    except:
-                        parte_texto = texto_completo
-                    
-                    st.markdown("---")
-                    
-                    # Contenedor visual blanco con solapas de navegación
-                    st.markdown('<div class="output-box">', unsafe_allow_html=True)
-                    
-                    tab1, tab2, tab3 = st.tabs(["✍️ El Texto Listo", "📸 Dirección Visual", "💡 Ganchos y Estrategia"])
-                    
-                    with tab1:
-                        st.markdown("<br>", unsafe_allow_html=True)
-                        st.write(parte_texto)
-                        
-                    with tab2:
-                        st.markdown("<br>", unsafe_allow_html=True)
-                        st.write(parte_visual)
-                        
-                    with tab3:
-                        st.markdown("<br>", unsafe_allow_html=True)
-                        st.write(parte_estrategia)
-                        
-                    st.markdown('</div>', unsafe_allow_html=True)
-                    st.balloons()
-                    
-                except Exception as e:
-                    st.error(f"Hubo un problema al procesar la solicitud con el servidor: {e}")
+                    Generá el contenido final listo para copiar. Modulá el estilo estrictamente al tono '{tono_comunicacion}' de forma natural y fresca. Incluí un cierre integrado orgánicamente que cumpla con el llamado a la acción: '{llamado_accion}'.
+                    - Si es Guión de reel: Estructura segundo a segundo enfocada en dinamismo visual y audio. Con un gancho fuerte que
