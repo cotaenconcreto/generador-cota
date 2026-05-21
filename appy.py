@@ -97,10 +97,26 @@ st.write("Completa las opciones de abajo para diseñar una estrategia de comunic
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 3. CONFIGURACIÓN DEL CONTENIDO INTUITIVO Y ENFOCADO
+# 3. CONFIGURACIÓN DEL CONTENIDO (Líneas compactas e impecables para evitar errores)
 tipo_contenido = st.selectbox(
     "1. Selecciona el tipo de contenido:",
     [
-        "Detrás de escena (Tu proceso de mezcla, llenado, el momento del desmolde o el lijado final)",
-        "Inspiracional (Tus motivaciones, por qué elegiste el concreto, el valor del diseño de autor hecho a mano)",
-        "Educativo (Cómo cuidar las piezas de cemento, ideas de decoración en casa,
+        "Detrás de escena (Proceso de mezcla, llenado, desmolde o lijado)",
+        "Inspiracional (Tus motivaciones, por qué concreto, valor hecho a mano)",
+        "Educativo (Cómo cuidar las piezas, ideas de uso, datos útiles)",
+        "Comunidad (Testimonios de clientes, mensajes lindos, agradecimientos)"
+    ]
+)
+
+formato_contenido = st.selectbox(
+    "2. Formato de contenido:",
+    ["Guión de reel", "Carrusel", "Copy de publicación"]
+)
+
+tono_comunicacion = st.selectbox(
+    "3. Tono de comunicación:",
+    ["Cálido y amigable", "Venta directa", "Divertido", "Inspirador"]
+)
+
+llamado_accion = st.selectbox(
+    "4. ¿Qué querés que haga la audiencia al terminar? (Llamado
