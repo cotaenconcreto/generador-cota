@@ -1,5 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
+import os
 
 # 1. CONFIGURACIÓN VISUAL INTEGRAL - ESTÉTICA COTA CLARA Y PREMIUM
 st.set_page_config(page_title="Cota en Concreto - Escuela de Emprendedoras", page_icon="⚡", layout="centered")
@@ -8,14 +9,11 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;700&display=swap');
     
-    /* Fondo Tono Crema Claro de Cota (#F6F1CE) */
     .stApp {
         background-color: #F6F1CE !important; 
         color: #2F3161 !important; 
         font-family: 'Inter', sans-serif;
     }
-    
-    /* Título: Magenta Corporativo (#BA007C) */
     h1 {
         color: #BA007C !important;
         font-family: 'Archivo Black', sans-serif;
@@ -24,16 +22,12 @@ st.markdown("""
         margin-bottom: 5px !important;
         font-size: 32px !important;
     }
-    
-    /* Subtítulo: Naranja/Siena (#D4803F) */
     h3, .highlight {
         color: #D4803F !important;
         font-family: 'Inter', sans-serif;
         font-weight: 700;
         margin-top: 0px !important;
     }
-    
-    /* Inputs y Selectores limpios */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #FFFFFF !important; 
         color: #2F3161 !important; 
@@ -41,14 +35,11 @@ st.markdown("""
         border-radius: 6px !important;
         box-shadow: none !important; 
     }
-
     label p {
         color: #2F3161 !important;
         font-weight: 600 !important;
         font-size: 16px !important;
     }
-    
-    /* Botón Principal Sólido Magenta */
     div.stButton > button:first-child {
         background-color: #BA007C !important; 
         color: #FFFFFF !important;
@@ -67,8 +58,6 @@ st.markdown("""
         background-color: #D4803F !important; 
         color: #FFFFFF !important;
     }
-    
-    /* Caja de resultado limpia */
     .output-box {
         background-color: #FFFFFF;
         padding: 25px;
@@ -77,8 +66,6 @@ st.markdown("""
         color: #2F3161;
         box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
     }
-
-    /* Estilo para las pestañas */
     .stTabs [data-baseweb="tab"] {
         color: #2F3161 !important;
         font-weight: 600 !important;
@@ -97,7 +84,7 @@ st.write("Completa las opciones de abajo para diseñar una estrategia de comunic
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 3. CONFIGURACIÓN DEL CONTENIDO (Líneas revisadas y compactas anti-recortes)
+# 3. CONFIGURACIÓN DEL CONTENIDO
 tipo_contenido = st.selectbox(
     "1. Tipo de contenido:",
     [
@@ -136,7 +123,7 @@ detalles_producto = st.text_area(
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 4. BOTÓN DE ACCIÓN Y GENERACIÓN CON EL CEREBRO ESTRATÉGICO
+# 4. BOTÓN DE ACCIÓN Y GENERACIÓN
 if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
     if not detalles_producto:
         st.warning("⚠️ Por favor, escribe una breve descripción de tu idea o producto.")
@@ -149,43 +136,69 @@ if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
         if not api_key_actual:
             st.error("❌ Error de configuración: Falta cargar la clave en los Secrets de Streamlit.")
         else:
-            # Aquí abrimos el bloque de carga de forma segura
             with st.spinner("Vaciando el molde... Preparando el contenido perfecto ✨"):
                 try:
                     genai.configure(api_key=api_key_actual)
                     model = genai.GenerativeModel('gemini-2.5-flash')
                     
-                    # Estructura limpia unida renglón por renglón para que nunca falle la sintaxis
-                    instrucciones_base = (
-                        "Actuá como un estratega premium de marketing digital y director de contenido especialista en marcas "
-                        "de diseño de autor, decoración y objetos hechos artesanalmente en CONCRETO y CEMENTO. "
-                        "Estás armando una propuesta de contenido para una alumna emprendedora de objetos de concreto.\n\n"
+                    # Leemos las instrucciones de manera segura desde el archivo externo
+                    if os.path.exists("prompt.txt"):
+                        with open("prompt.txt", "r", encoding="utf-8") as f:
+                            manifiesto = f.read()
+                    else:
+                        manifiesto = "Actuá como estratega de contenido de concreto."
+                    
+                    # Armamos la consulta inyectando las variables de forma limpia
+                    instrucciones_finales = (
+                        f"{manifiesto}\n\n"
+                        f"DATOS DE LA Publicación:\n"
+                        f"- Tipo de contenido seleccionado: {tipo_contenido}\n"
+                        f"- Formato: {formato_contenido}\n"
+                        f"- Tono requerido: {tono_comunicacion}\n"
+                        f"- Llamado a la acción: {llamado_accion}\n"
+                        f"- Idea/Producto: {detalles_producto}\n"
+                    )
+                    
+                    response = model.generate_content(instrucciones_finales)
+                    texto_completo = response.text
+                    
+                    parte_texto = "No se pudo generar el texto principal."
+                    parte_visual = "No se pudieron generar las ideas visuales."
+                    parte_estrategia = "No se pudo generar la estrategia."
+                    
+                    try:
+                        if "[SECCION_TEXTO]" in texto_completo:
+                            partes = texto_completo.split("[SECCION_TEXTO]")[1].split("[SECCION_VISUAL]")
+                            parte_texto = partes[0].strip()
+                            if len(partes) > 1:
+                                sub_partes = partes[1].split("[SECCION_ESTRATEGIA]")
+                                parte_visual = sub_partes[0].strip()
+                                if len(sub_partes) > 1:
+                                    parte_estrategia = sub_partes[1].strip()
+                        else:
+                            parte_texto = texto_completo
+                    except:
+                        parte_texto = texto_completo
+                    
+                    st.markdown("---")
+                    st.markdown('<div class="output-box">', unsafe_allow_html=True)
+                    
+                    tab1, tab2, tab3 = st.tabs(["✍️ El Texto Listo", "📸 Dirección Visual", "💡 Ganchos y Estrategia"])
+                    
+                    with tab1:
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.write(parte_texto)
                         
-                        "MANIFIESTO ESTRATÉGICO DEL TALLER (Reglas estrictas de comunicación):\n"
-                        "1. EVITÁ EL POST CATÁLOGO: Entendés que el error número uno de las alumnas es mostrar solo una foto fija "
-                        "del producto terminado creyendo que eso basta. Tu misión es obligarlas en la dirección visual y en el "
-                        "texto a mostrar la magia del proceso creativo como el desorden del taller, las manos sucias, la mezcla, "
-                        "el desmolde. El proceso aporta el verdadero valor.\n"
-                        "2. ENFOQUE DE VENTA DIRECTA: Si la alumna elige este tono, NO generes un texto transaccional aburrido "
-                        "o basado solo en precio. Enfocá la venta desde la perspectiva de que son piezas con carácter y "
-                        "personalidad capaces de transformar por completo y cambiar un espacio en el hogar.\n"
-                        "3. TRATAMIENTO DE IMPERFECCIONES (EL PORO): Si surge hablar de la textura, los poros, las marcas del "
-                        "molde o las variaciones del cemento, tratalos con total naturalidad. No los defiendas con exageración "
-                        "ni dejes que se noten como algo malo o un defecto. Es una propiedad misma del material con la que "
-                        "hay que amigarse; denota autenticidad.\n"
-                        "4. FILTRO ANTI-CLICHÉS: Prohibido usar frases hechas de Instagram que matan la identidad. NO uses "
-                        "términos como piezas únicas, concreto con identidad, buscas el regalo ideal o llego el viernes. "
-                        "Escribí de forma humana, directa y lo suficientemente abierta para que cada alumna pueda leerlo e "
-                        "imprimirle su propio tono de voz al hablar.\n"
-                        "5. CERO ARCILLA O CERÁMICA: Recordá que el oficio es concreto y cemento. Nada de hornos, tornos ni "
-                        "modelado de arcilla desde cero con las manos. Usamos moldes, fraguado, vertido y lijado.\n\n"
+                    with tab2:
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.write(parte_visual)
                         
-                        f"Variables seleccionadas por la alumna:\n"
-                        f"- Tipo de contenido: {tipo_contenido}\n"
-                        f"- Formato seleccionado: {formato_contenido}\n"
-                        f"- Tono de comunicación requerido: {tono_comunicacion}\n"
-                        f"- Objetivo/Llamado a la acción (CTA): {llamado_accion}\n"
-                        f"- Detalles de su producto o idea: {detalles_producto}\n\n"
+                    with tab3:
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.write(parte_estrategia)
                         
-                        "Tu respuesta DEBE estar dividida exactamente en estas 3 secciones utilizando títulos claros "
-                        "(separa cada sección con marcadores estructurales como [SECCION_TEXTO], [SECCION_VISUAL],
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    st.balloons()
+                    
+                except Exception as e:
+                    st.error(f"Hubo un problema al procesar la solicitud con el servidor: {e}")
