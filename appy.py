@@ -33,7 +33,7 @@ st.markdown("""
         margin-top: 0px !important;
     }
     
-    /* Inputs y Selectores limpios (Fondo blanco liso, borde Siena) */
+    /* Inputs y Selectores limpios */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #FFFFFF !important; 
         color: #2F3161 !important; 
@@ -42,7 +42,6 @@ st.markdown("""
         box-shadow: none !important; 
     }
 
-    /* Etiquetas de los campos */
     label p {
         color: #2F3161 !important;
         font-weight: 600 !important;
@@ -94,7 +93,7 @@ st.markdown("""
 # 2. INTERFAZ EN PANTALLA
 st.title("⚡ Crea tu contenido estratégico")
 st.subheader("Laboratorio de Contenido para Emprendedoras")
-st.write("Completa las opciones de abajo de forma simple para diseñar una estrategia de comunicación completa y a tu medida.")
+st.write("Completa las opciones de abajo para diseñar una estrategia de comunicación completa y a tu medida.")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -137,7 +136,7 @@ detalles_producto = st.text_area(
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 4. BOTÓN DE ACCIÓN Y GENERACIÓN CON EL NUEVO CEREBRO ESTRATÉGICO
+# 4. BOTÓN DE ACCIÓN Y GENERACIÓN CON EL CEREBRO ESTRATÉGICO
 if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
     if not detalles_producto:
         st.warning("⚠️ Por favor, escribe una breve descripción de tu idea o producto para poder redactar.")
@@ -155,27 +154,10 @@ if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
                     genai.configure(api_key=api_key_actual)
                     model = genai.GenerativeModel('gemini-2.5-flash')
                     
-                    # FILTROS Y REGLAS INTERNAS ACORDES A TUS DEFINICIONES
+                    # PROMPT BLINDADO - Eliminadas comillas conflictivas que rompían la sintaxis
                     prompt_sistema = f"""
                     Actuá como un estratega premium de marketing digital y director de contenido especialista en marcas de diseño de autor, decoración y objetos hechos artesanalmente en CONCRETO y CEMENTO.
                     Estás armando una propuesta de contenido para una alumna emprendedora de objetos de concreto.
 
                     MANIFIESTO ESTRATÉGICO DEL TALLER (Reglas estrictas de comunicación):
-                    1. EVITÁ EL POST CATÁLOGO: Entendés que el error número uno de las alumnas es mostrar solo una foto fija del producto terminado creyendo que eso basta. Tu misión es obligarlas en la dirección visual y en el texto a mostrar 'la magia del proceso creativo' (el desorden del taller, las manos sucias, la mezcla, el desmolde). El proceso aporta el verdadero valor.
-                    2. ENFOQUE DE VENTA DIRECTA: Si la alumna elige este tono, NO generes un texto transaccional aburrido o basado solo en precio. Enfocá la venta desde la perspectiva de que son 'piezas con carácter y personalidad' capaces de transformar por completo y cambiar un espacio en el hogar.
-                    3. TRATAMIENTO DE IMPERFECCIONES (EL PORO): Si surge hablar de la textura, los poros, las marcas del molde o las variaciones del cemento, tratalos con total naturalidad. No los defiendas con exageración ni dejes que se noten como algo malo o un defecto. Es una propiedad misma del material con la que hay que amigarse; denota autenticidad.
-                    4. FILTRO ANTI-CLICHÉS: Prohibido usar frases hechas de Instagram que matan la identidad y suenan todas igual. NO uses términos como 'piezas únicas', 'concreto con identidad', '¿buscás el regalo ideal?' o 'llegó el viernes'. Escribí de forma humana, directa y lo suficientemente abierta para que cada alumna pueda leerlo e imprimirle su propio tono de voz al hablar.
-                    5. CERO ARCILLA O CERÁMICA: Recordá que el oficio es concreto/cemento. Nada de hornos, tornos ni modelado de arcilla desde cero con las manos. Usamos moldes, fraguado, vertido y lijado.
-
-                    Variables seleccionadas por la alumna:
-                    - Tipo de contenido: {tipo_contenido}
-                    - Formato seleccionado: {formato_contenido}
-                    - Tono de comunicación requerido: {tono_comunicacion}
-                    - Objetivo/Llamado a la acción (CTA): {llamado_accion}
-                    - Detalles de su producto o idea: {detalles_producto}
-
-                    Tu respuesta DEBE estar dividida exactamente en estas 3 secciones utilizando títulos claros (separa cada sección con marcadores estructurales como [SECCION_TEXTO], [SECCION_VISUAL], [SECCION_ESTRATEGIA]):
-
-                    [SECCION_TEXTO]
-                    Generá el contenido final listo para copiar. Modulá el estilo estrictamente al tono '{tono_comunicacion}' de forma natural y fresca. Incluí un cierre integrado orgánicamente que cumpla con el llamado a la acción: '{llamado_accion}'.
-                    - Si es Guión de reel: Estructura segundo a segundo enfocada en dinamismo visual y audio. Con un gancho fuerte que
+                    1. EV
