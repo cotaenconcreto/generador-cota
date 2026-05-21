@@ -42,7 +42,7 @@ st.markdown("""
         box-shadow: none !important; 
     }
 
-    /* Etiquetas de los campos en color oscuro legible */
+    /* Etiquetas de los campos */
     label p {
         color: #2F3161 !important;
         font-weight: 600 !important;
@@ -72,34 +72,65 @@ st.markdown("""
     /* Caja de resultado limpia */
     .output-box {
         background-color: #FFFFFF;
-        padding: 20px;
+        padding: 25px;
         border-radius: 8px;
         border-left: 5px solid #BA007C;
         color: #2F3161;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
+    }
+
+    /* Estilo para las pestañas */
+    .stTabs [data-baseweb="tab"] {
+        color: #2F3161 !important;
+        font-weight: 600 !important;
+    }
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        color: #BA007C !important;
+        border-bottom-color: #BA007C !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 2. INTERFAZ EN PANTALLA (Textos actualizados)
+# 2. INTERFAZ EN PANTALLA
 st.title("⚡ Crea tu contenido estratégico")
 st.subheader("Laboratorio de Contenido para Emprendedoras")
-st.write("Completa las opciones de abajo de forma simple para diseñar los textos de tu marca en un clic.")
+st.write("Completa las opciones de abajo para diseñar una estrategia de comunicación completa y a tu medida.")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 3. CONFIGURACIÓN DEL CONTENIDO (Menús limpios sin tecnicismos)
+# 3. CONFIGURACIÓN DEL CONTENIDO (Con aclaraciones ultra amigables entre paréntesis)
 tipo_contenido = st.selectbox(
-    "Selecciona el tipo de contenido:",
-    ["Detrás de escena", "Inspiracional", "Educativo/usos", "Comunidad"]
+    "1. Selecciona el tipo de contenido:",
+    [
+        "Detrás de escena (Tu proceso creativo, el taller, el paso a paso de cómo lo hiciste)",
+        "Inspiracional (Tus motivaciones, tu propósito, qué te inspira a diseñar o emprender)",
+        "Educativo (Cómo usar tu producto, ideas de decoración, combinaciones o datos útiles)",
+        "Comunidad (Testimonios de clientes, mensajes bonitos, agradecimientos o alianzas)"
+    ]
 )
 
 formato_contenido = st.selectbox(
-    "Formato de contenido:",
+    "2. Formato de contenido:",
     ["Guión de reel", "Carrusel", "Copy de publicación"]
 )
 
+tono_comunicacion = st.selectbox(
+    "3. Tono de comunicación:",
+    ["Cálido y amigable", "Venta directa", "Divertido", "Inspirador"]
+)
+
+llamado_accion = st.selectbox(
+    "4. ¿Qué querés que haga la audiencia al terminar de leer? (Llamado a la acción):",
+    [
+        "Que dejen un comentario",
+        "Que me manden un mensaje directo (MD)",
+        "Que vayan al link de la biografía (Tienda)",
+        "Que guarden o compartan la publicación"
+    ]
+)
+
 detalles_producto = st.text_area(
-    "¿De qué producto, lanzamiento o idea específica vas a hablar hoy?",
+    "5. ¿De qué producto, lanzamiento o idea específica vas a hablar hoy?",
     placeholder="Ej: El stock de tazas de cerámica, el lanzamiento de mis nuevas velas, cómo combino los colores de mis productos...",
     height=120
 )
@@ -107,11 +138,10 @@ detalles_producto = st.text_area(
 st.markdown("<br>", unsafe_allow_html=True)
 
 # 4. BOTÓN DE ACCIÓN Y GENERACIÓN
-if st.button("GENERAR CONTENIDO PARA MI MARCA 🚀"):
+if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
     if not detalles_producto:
         st.warning("⚠️ Por favor, escribe una breve descripción de tu idea o producto para poder redactar.")
     else:
-        # Recuperar la API key cargada en los secretos de Streamlit
         if "gemini_api_key" in st.secrets:
             api_key_actual = st.secrets["gemini_api_key"]
         else:
@@ -120,35 +150,86 @@ if st.button("GENERAR CONTENIDO PARA MI MARCA 🚀"):
         if not api_key_actual:
             st.error("❌ Error de configuración: Falta cargar la clave en el servidor de Streamlit (Secrets).")
         else:
-            with st.spinner("Modelando tus ideas... Diseñando el texto perfecto ✨"):
+            with st.spinner("Modelando tus ideas... Diseñando la estrategia perfecta ✨"):
                 try:
                     genai.configure(api_key=api_key_actual)
-                    model = genai.GenerativeModel('gemini-1.5-flash')
+                    model = genai.GenerativeModel('gemini-2.5-flash')
                     
-                    # El prompt traduce las opciones simples en instrucciones avanzadas de marketing
                     prompt_sistema = f"""
-                    Actuá como un estratega experto en marketing digital para redes sociales y copywriter premium para marcas de diseño de autor, artesanales y emprendimientos creativos.
-                    Estás ayudando a una alumna de la escuela de emprendedoras a escribir el contenido de SU propia marca.
-                    
-                    Tono de voz final del texto generado: Apasionado por lo hecho a mano, auténtico, humano, creativo, cercano y muy directo. Evitá frases armadas cliché de marketing tradicional o palabras corporativas aburridas. Queremos conectar de verdad con la audiencia mostrando el valor del trabajo propio.
-                    
-                    Selecciones de la alumna:
-                    - Tipo de contenido: {tipo_contenido} (Nota: 'Detrás de escena' refiere a procesos, fabricación o espacio; 'Inspiracional' a la historia, el propósito o la motivación; 'Educativo/usos' a cómo se usa el producto o ideas de combinación; 'Comunidad' a feedback, alianzas o agradecimientos).
+                    Actuá como un estratega premium de marketing digital y director de contenido para marcas de diseño de autor, decoración y emprendimientos creativos. 
+                    Estás armando una propuesta de contenido hipercompleta para una alumna emprendedora.
+
+                    Variables clave seleccionadas por la alumna:
+                    - Tipo de contenido: {tipo_contenido}
                     - Formato seleccionado: {formato_contenido}
-                    - Producto o tema central de su negocio: {detalles_producto}
-                    
-                    Estructura obligatoria según el formato seleccionado:
-                    1. Si eligió 'Guión de reel': Armá un guión audiovisual paso a paso. Empezá con un gancho atrapante en los primeros 3 segundos (frase fuerte que frene el scroll). Incluí sugerencias de planos visuales dinámicos que muestren el proceso o el producto bajo luz natural, y terminá con una llamada a la acción clara para generar comentarios.
-                    2. Si eligió 'Carrusel': Indicá con total claridad qué poner en cada placa (de la 1 a la 5) con títulos magnéticos y un cierre interactivo en la última placa.
-                    3. Si eligió 'Copy de publicación': Creá un texto estructurado con párrafos cortos, renglones espaciados, uso limpio de emojis acordes al diseño y un cierre enfocado en comunidad.
-                    
-                    Escribí la respuesta de forma clara, directa y lista para que la alumna la copie y la use en su Instagram. Usa español latinoamericano o rioplatense fresco.
+                    - Tono de comunicación requerido: {tono_comunicacion}
+                    - Objetivo/Llamado a la acción (CTA): {llamado_accion}
+                    - Detalles de su producto o idea: {detalles_producto}
+
+                    Tu respuesta DEBE estar dividida exactamente en estas 3 secciones utilizando títulos claros (separa cada sección con marcadores estructurales como [SECCION_TEXTO], [SECCION_VISUAL], [SECCION_ESTRATEGIA]):
+
+                    [SECCION_TEXTO]
+                    Generá el contenido final que la alumna va a copiar. Modulá el estilo estrictamente al tono '{tono_comunicacion}'. Asegurate de que se sienta humano, cercano y apasionado por lo hecho a mano. Es fundamental que incluyas un cierre o remate final que cumpla de forma creativa con el llamado a la acción: '{llamado_accion}'.
+                    - Si es Guión de reel: Estructura segundo a segundo (Audio y sugerencia visual de video). Incluí un gancho inicial fuerte.
+                    - Si es Carrusel: Contenido detallado de la Placa 1 a la 5.
+                    - Si es Copy de publicación: Un caption listo con párrafos cortos, renglones bien espaciados y emojis.
+
+                    [SECCION_VISUAL]
+                    Brindá la dirección de arte y fotografía para esta publicación pensando en marcas independientes de diseño:
+                    - Qué filmar o fotografiar (planos detalle, texturas, imperfecciones reales, interacción humana con el producto).
+                    - Estilo de iluminación (luz natural, sombras) y composición para que parezca una foto editorial limpia y profesional.
+                    - Ideas para la portada.
+
+                    [SECCION_ESTRATEGIA]
+                    - 3 Ganchos (hooks) alternativos adaptados al tono '{tono_comunicacion}'.
+                    - Estrategia para Historias: Qué encuesta, pregunta o sticker subir a sus historias de Instagram ese mismo día para complementar y derivar tráfico a este post.
+                    - Un bloque de 5 a 8 hashtags estratégicos y específicos del nicho de diseño y productos hechos a mano.
+
+                    Escribí de forma clara y directa en español latinoamericano o rioplatense fresco, listo para usar.
                     """
                     
                     response = model.generate_content(prompt_sistema)
+                    texto_completo = response.text
+                    
+                    # Separación por pestañas
+                    parte_texto = "No se pudo generar el texto principal."
+                    parte_visual = "No se pudieron generar las ideas visuales."
+                    parte_estrategia = "No se pudo generar la estrategia."
+                    
+                    try:
+                        if "[SECCION_TEXTO]" in texto_completo:
+                            partes = texto_completo.split("[SECCION_TEXTO]")[1].split("[SECCION_VISUAL]")
+                            parte_texto = partes[0].strip()
+                            if len(partes) > 1:
+                                sub_partes = partes[1].split("[SECCION_ESTRATEGIA]")
+                                parte_visual = sub_partes[0].strip()
+                                if len(sub_partes) > 1:
+                                    parte_estrategia = sub_partes[1].strip()
+                        else:
+                            parte_texto = texto_completo
+                    except:
+                        parte_texto = texto_completo
                     
                     st.markdown("---")
-                    st.markdown(f'<div class="output-box"><h3>✨ Tu Contenido Generado:</h3><br>{response.text}</div>', unsafe_allow_html=True)
+                    
+                    # Contenedor visual blanco con solapas de navegación
+                    st.markdown('<div class="output-box">', unsafe_allow_html=True)
+                    
+                    tab1, tab2, tab3 = st.tabs(["✍️ El Texto Listo", "📸 Dirección Visual", "💡 Ganchos y Estrategia"])
+                    
+                    with tab1:
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.write(parte_texto)
+                        
+                    with tab2:
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.write(parte_visual)
+                        
+                    with tab3:
+                        st.markdown("<br>", unsafe_allow_html=True)
+                        st.write(parte_estrategia)
+                        
+                    st.markdown('</div>', unsafe_allow_html=True)
                     st.balloons()
                     
                 except Exception as e:
