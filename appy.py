@@ -147,17 +147,4 @@ if st.button("GENERAR ESTRATEGIA COMPLETA 🚀"):
             api_key_actual = None
 
         if not api_key_actual:
-            st.error("❌ Error de configuración: Falta cargar la clave en el servidor de Streamlit (Secrets).")
-        else:
-            with st.spinner("Vaciando el molde... Preparando el contenido perfecto ✨"):
-                try:
-                    genai.configure(api_key=api_key_actual)
-                    model = genai.GenerativeModel('gemini-2.5-flash')
-                    
-                    # PROMPT BLINDADO - Eliminadas comillas conflictivas que rompían la sintaxis
-                    prompt_sistema = f"""
-                    Actuá como un estratega premium de marketing digital y director de contenido especialista en marcas de diseño de autor, decoración y objetos hechos artesanalmente en CONCRETO y CEMENTO.
-                    Estás armando una propuesta de contenido para una alumna emprendedora de objetos de concreto.
-
-                    MANIFIESTO ESTRATÉGICO DEL TALLER (Reglas estrictas de comunicación):
-                    1. EV
+            st.error("❌ Error de configuración: Falta cargar la
