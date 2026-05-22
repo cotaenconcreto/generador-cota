@@ -42,7 +42,7 @@ st.markdown("""
         margin-bottom: 10px !important;
     }
     
-    /* Títulos de sección con íconos */
+    /* Títulos de sección */
     .section-title {
         color: #2F3161;
         font-size: 14px;
@@ -52,7 +52,7 @@ st.markdown("""
         margin-bottom: 5px;
     }
 
-    /* Inputs estilizados llanos */
+    /* Inputs estilizados */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #F9F9F9 !important; 
         color: #2F3161 !important; 
@@ -83,58 +83,4 @@ st.markdown("""
         margin-top: 10px;
     }
     div.stButton > button:first-child:hover {
-        background-color: #D4803F !important; 
-    }
-    
-    /* Caja de resultados */
-    .output-box {
-        background-color: #FFFFFF;
-        padding: 25px;
-        border-radius: 12px;
-        border-left: 5px solid #BA007C;
-        color: #2F3161;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
-    }
-    .stTabs [data-baseweb="tab"] {
-        color: #2F3161 !important;
-        font-weight: 600 !important;
-    }
-    .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        color: #BA007C !important;
-        border-bottom-color: #BA007C !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# 2. ENCABEZADO DE LA APP
-st.title("⚡ Crea tu contenido estratégico")
-st.subheader("Laboratorio de Contenido para Emprendedoras")
-st.write("Completa los bloques de abajo para diseñar la comunicación de tus piezas de concreto.")
-st.markdown("<br>", unsafe_allow_html=True)
-
-# 3. BLOQUE 1: TU PRODUCTO (Contenedor Seguro de Streamlit)
-with st.container(border=True):
-    st.markdown('<div class="section-title">📦 TU PRODUCTO Y FORMATO</div>', unsafe_allow_html=True)
-    
-    # Dividimos en dos columnas para Producto y Formato
-    col1, col2 = st.columns(2)
-    with col1:
-        tipo_contenido = st.selectbox(
-            "1. Tipo de contenido:",
-            [
-                "Detrás de escena (Proceso, mezcla, desmolde, lijado)",
-                "Inspiracional (Motivaciones, propósito, el valor artesanal)",
-                "Educativo (Cómo cuidar las piezas, ideas de uso, datos útiles)",
-                "Comunidad (Testimonios de clientes, mensajes lindos, gracias)"
-            ]
-        )
-    with col2:
-        formato_contenido = st.selectbox(
-            "2. Formato de contenido:",
-            ["Guión de reel", "Carrusel", "Copy de publicación"]
-        )
-
-    # Campo de texto para los detalles
-    detalles_producto = st.text_area(
-        "3. ¿De qué pieza o idea vas a hablar hoy? (Características especiales):",
-        placeholder="Ej: Lanzamiento de bachas de baño, stock de macetas color block, porta velas rústicos con burbujas...",
+        background-color: #D4803F !important;
